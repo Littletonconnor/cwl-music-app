@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 
+import { TrackTable } from '@/components/track-table'
 import { getAllSongs, searchSongs } from '@/lib/db/queries'
 
 export default function Page() {
@@ -22,6 +23,5 @@ async function Tracks({ searchParams }: TracksProps) {
   const query = (await searchParams)?.q
   const songs = query ? await searchSongs(query) : await getAllSongs()
 
-  return <pre>{JSON.stringify(songs, null, 2)}</pre>
-  // return <TrackTable query={query} playlist={{ songs }} />
+  return <TrackTable query={query} playlist={{ songs }} />
 }

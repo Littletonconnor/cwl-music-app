@@ -18,8 +18,6 @@ export function Playlists() {
   const playlistsContainerRef = useRef<HTMLUListElement>(null)
   const { registerPanelRef, handleKeyNavigation, setActivePanel } = usePlayback()
 
-  console.log('pathname', pathname)
-
   React.useEffect(() => {
     registerPanelRef('sidebar', playlistsContainerRef)
   }, [registerPanelRef])
@@ -50,7 +48,7 @@ export function Playlists() {
             Playlists
           </Link>
           <form action={addPlaylistAction}>
-            <Button>
+            <Button variant="ghost" size="icon" className="w-5 h-5" type="submit">
               <Plus className="w-3 h-3 text-gray-400" />
               <span className="sr-only">Add new playlist</span>
             </Button>

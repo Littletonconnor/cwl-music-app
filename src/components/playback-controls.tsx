@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Heart, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from 'lucide-react'
 
+import placeholder from '@/app/placeholder.webp'
 import { Button } from '@/components/button'
 import { usePlayback } from '@/context/playback-context'
 import { formatDuration } from '@/lib/utils'
@@ -22,11 +23,23 @@ export function PlaybackControls() {
     const audio = audioRef.current
     if (!audio) return
 
+    console.log('audio', audio.duration)
+
     const updateTime = () => setCurrentTime(audio.currentTime)
-    const updateDuration = () => setCurrentTime(audio.duration)
+    const updateDuration = () => {
+      // I think audio tracks with unknown durations sometimes get set as infinity
+      if (Number.POSITIVE_INFINITY) {
+        debugger
+        setDuration(currentTrack?.duration ?? 0)
+      } else {
+        setDuration(audio.duration)
+      }
+    }
 
     audio.addEventListener('timeupdate', updateTime)
-    audio.addEventListener('loadedmetadata', updateDuration)
+    audio.addEventListener('loadedmetadata', (e) => {
+      updateDuration()
+    })
 
     return () => {
       audio.removeEventListener('timeupdate', updateTime)
@@ -34,6 +47,10 @@ export function PlaybackControls() {
     }
   }, [setCurrentTime, setDuration])
 
+  /**
+   * Use navigator media session property to be able to adjust music through
+   * operating system.
+   */
   React.useEffect(() => {
     if ('mediaSession' in navigator && currentTrack) {
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -98,7 +115,7 @@ export function PlaybackControls() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 flex items-center justify-between p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] bg-[#181818] border-t border-[#282828">
-      <audio />
+      <audio ref={audioRef} />
       <TrackInfo />
       <div className="flex flex-col items-center w-1/3">
         <PlaybackButtons />
@@ -181,11 +198,13 @@ export function TrackInfo() {
     <div className="flex items-center space-x-3 w-1/3">
       {currentTrack && (
         <>
-          <img
-            className="w-10 h-10 object-cover"
-            src={currentTrack.imageUrl || '/placeholder.svg'}
-            alt="Now playing"
-          />
+          <div className="overflow-hidden rounded-sm">
+            <img
+              className="w-10 h-10 object-cover"
+              src={currentTrack.imageUrl || placeholder.src}
+              alt="Now playing"
+            />
+          </div>
           <div className="flex-shrink min-w-0">
             <div className="text-sm font-medium truncate max-w-[120px] sm:max-w-[200px] text-gray-200">
               {currentTrack.name}
@@ -205,7 +224,7 @@ export function TrackInfo() {
 
 export function Volume() {
   const { audioRef, currentTrack } = usePlayback()
-  const [volume, setVolume] = React.useState(0)
+  const [volume, setVolume] = React.useState(100)
   const [isMuted, setIsMuted] = React.useState(false)
   const [isVolumeVisible, setIsVolumeVisible] = React.useState(false)
   const volumeBarRef = React.useRef<HTMLDivElement>(null)
@@ -250,9 +269,9 @@ export function Volume() {
   return (
     <div className="relative">
       <Button
-        value="ghost"
+        variant="ghost"
         size="icon"
-        className="h-8 w-8"
+        className="w-8 h-8"
         onClick={() => {
           toggleMute()
           toggleVolumeVisibility()

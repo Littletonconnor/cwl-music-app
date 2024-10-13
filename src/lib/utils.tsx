@@ -17,12 +17,12 @@ export function formatDuration(durationInSeconds: number) {
   return `${minutes}:${formattedSeconds}`
 }
 
-export function highlightText(text: string, query?: string) {
+export function highlightText(text: string, query: string | undefined) {
   if (!query) return text
 
   const parts = text.split(new RegExp(`(${query})`, 'gi'))
   return parts.map((part, i) => {
-    part.toLowerCase() === query.toLowerCase() ? (
+    return part.toLowerCase() === query.toLowerCase() ? (
       <mark key={i} className="bg-yellow-200 text-black">
         {part}
       </mark>
@@ -40,4 +40,15 @@ export function highlightText(text: string, query?: string) {
 export function getAudioSrc(url: string) {
   const filename = url.split('/').pop()
   return `/api/audio/${encodeURIComponent(filename || '')}`
+}
+
+export const ENTER_KEY = 'Enter'
+export const SPACE_KEY = ' '
+
+export function didKeyBoardSelect(e: React.KeyboardEvent<HTMLTableRowElement>) {
+  if (e.key === ENTER_KEY || e.key === SPACE_KEY) {
+    return true
+  } else {
+    return false
+  }
 }

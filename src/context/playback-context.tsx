@@ -49,7 +49,7 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
       audioRef.current.play()
     }
     setIsPlaying(!isPlaying)
-  }, [])
+  }, [isPlaying])
 
   const playTrack = React.useCallback((track: Song) => {
     setCurrentTrack(track)
