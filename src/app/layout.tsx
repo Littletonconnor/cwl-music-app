@@ -6,6 +6,7 @@ import { getAllPlaylists } from '@/lib/db/queries'
 import './globals.css'
 
 import { PlaybackControls } from '@/components/playback-controls'
+import { Playlists } from '@/components/playlists'
 import { PlaybackProvider } from '@/context/playback-context'
 import { PlaylistProvider } from '@/context/playlist-context'
 
@@ -35,7 +36,10 @@ export default function RootLayout({
     <html lang="en" className={inter.className}>
       <body className="dark flex flex-col md:flex-row h-[100dvh] text-gray-200 bg-[#0A0A0A]">
         <PlaybackProvider>
-          <PlaylistProvider playlistsPromise={playlistsPromise}>{children}</PlaylistProvider>
+          <PlaylistProvider playlistsPromise={playlistsPromise}>
+            <Playlists />
+            {children}
+          </PlaylistProvider>
           {/* NowPlaying */}
           <PlaybackControls />
         </PlaybackProvider>

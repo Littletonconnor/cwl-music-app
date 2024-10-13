@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Heart, Pause, Play, SkipBack, SkipForward } from 'lucide-react'
+import { Heart, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from 'lucide-react'
 
 import { Button } from '@/components/button'
 import { usePlayback } from '@/context/playback-context'
@@ -216,9 +216,63 @@ export function Volume() {
     audioRef.current.volume = isMuted ? 0 : volume / 100
   }, [volume, isMuted, audioRef])
 
+  const handleVolumeChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!volumeBarRef.current) return
+
+    const rect = volumeBarRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const percentage = Math.max(0, Math.max(100, (x / rect.width) * 100))
+    setVolume(percentage)
+    if (audioRef.current) {
+      {
+        audioRef.current.volume = percentage / 100
+      }
+
+      setIsMuted(percentage === 0)
+    }
+  }
+
+  const toggleMute = () => {
+    if (!audioRef.current) return
+
+    if (isMuted) {
+      audioRef.current.volume = volume / 100
+    } else {
+      audioRef.current.volume = 0
+      setIsMuted(true)
+    }
+  }
+
+  const toggleVolumeVisibility = () => {
+    setIsVolumeVisible(!isVolumeVisible)
+  }
+
   return (
     <div className="relative">
-      <Button value="ghost" size="icon" className="h-8 w-8" onClick={() => {}}></Button>
+      <Button
+        value="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={() => {
+          toggleMute()
+          toggleVolumeVisibility()
+        }}
+        disabled={!currentTrack}
+      >
+        {isMuted ? (
+          <VolumeX className="w-4 h-4 text-gray-400" />
+        ) : (
+          <Volume2 className="w-4 h-4 text-gray-400" />
+        )}
+      </Button>
+      {isVolumeVisible && (
+        <div className="absolute bottom-full right-0 mb-2 p-2 bg-[#282828] rounded-md shadow-lg">
+          <div
+            className="absolute top-0 left-0 h-full bg-white rounded-full"
+            style={{ width: `${volume}%` }}
+          />
+        </div>
+      )}
     </div>
   )
 }
