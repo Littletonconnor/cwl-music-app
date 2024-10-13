@@ -5,6 +5,10 @@ import { getAllPlaylists } from '@/lib/db/queries'
 
 import './globals.css'
 
+import { PlaybackControls } from '@/components/playback-controls'
+import { PlaybackProvider } from '@/context/playback-context'
+import { PlaylistProvider } from '@/context/playlist-context'
+
 export const metadata: Metadata = {
   title: 'CWL-UI | Music Player',
   description: 'A local first music player',
@@ -30,7 +34,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className="dark flex flex-col md:flex-row h-[100dvh] text-gray-200 bg-[#0A0A0A]">
-        {children}
+        <PlaybackProvider>
+          <PlaylistProvider playlistsPromise={playlistsPromise}>{children}</PlaylistProvider>
+          {/* NowPlaying */}
+          <PlaybackControls />
+        </PlaybackProvider>
       </body>
     </html>
   )

@@ -22,6 +22,6 @@ async function Tracks({ searchParams }: TracksProps) {
   const query = (await searchParams)?.q
   const songs = query ? await searchSongs(query) : await getAllSongs()
 
-  return <div>{JSON.stringify(songs, null, 2)}</div>
+  return <pre>{JSON.stringify(songs, null, 2)}</pre>
   // return <TrackTable query={query} playlist={{ songs }} />
 }
