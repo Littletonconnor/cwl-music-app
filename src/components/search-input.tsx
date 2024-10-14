@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
@@ -9,6 +10,7 @@ interface SearchInputProps {
 }
 
 export function SearchInput({ value: initialValue = '' }: SearchInputProps) {
+  const router = useRouter()
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [value, setValue] = React.useState(initialValue)
 
@@ -26,7 +28,9 @@ export function SearchInput({ value: initialValue = '' }: SearchInputProps) {
         placeholder="Search"
         value={value}
         onChange={(e) => {
-          setValue(e.currentTarget.value)
+          const q = e.currentTarget.value
+          setValue(q)
+          router.push(`/?q=${encodeURIComponent(q)}`)
         }}
       />
       {value ? (
