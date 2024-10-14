@@ -23,18 +23,8 @@ export function PlaybackControls() {
     const audio = audioRef.current
     if (!audio) return
 
-    console.log('audio', audio.duration)
-
     const updateTime = () => setCurrentTime(audio.currentTime)
-    const updateDuration = () => {
-      // I think audio tracks with unknown durations sometimes get set as infinity
-      if (Number.POSITIVE_INFINITY) {
-        debugger
-        setDuration(currentTrack?.duration ?? 0)
-      } else {
-        setDuration(audio.duration)
-      }
-    }
+    const updateDuration = () => setDuration(audio.duration)
 
     audio.addEventListener('timeupdate', updateTime)
     audio.addEventListener('loadedmetadata', (e) => {

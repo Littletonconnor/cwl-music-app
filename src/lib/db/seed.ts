@@ -63,11 +63,13 @@ async function seedPlaylists() {
       .returning()
 
     const allSongs = await db.select().from(songs)
+    const max = allSongs.length - 1
+    const min = 0
 
     await db.insert(playlistSongs).values({
       id: uuidv4(),
       playlistId: playlist.id,
-      songId: allSongs[0].id,
+      songId: allSongs[Math.floor(Math.random() * (max - min + 1)) + min].id,
       order: 0,
     })
   }
