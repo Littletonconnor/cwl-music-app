@@ -28,9 +28,7 @@ async function seedSongs() {
 
     let imageUrl = ''
     if (metadata.common.picture && metadata.common.picture.length > 0) {
-      const picture = metadata.common.picture[0]
-      const base64Image = btoa(picture.data.toString())
-      imageUrl = `data:${picture.format};base64,${base64Image}`
+      // TODO: store the image locally for local files and externally for external files.
     }
 
     const songData = {
@@ -43,7 +41,7 @@ async function seedSongs() {
       bpm: metadata.common.bpm ? Math.round(metadata.common.bpm) : null,
       key: metadata.common.key || null,
       imageUrl,
-      audioUrl: filePath,
+      audioUrl: filePath, // TODO: store as filePath only if local audio file, otherwise store externally.
       isLocal: true,
     }
 

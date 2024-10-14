@@ -13,7 +13,7 @@ interface TrackTableProps {
   query?: string
 }
 
-export function TrackTable({ playlist, query }: TrackTableProps) {
+export function SongTable({ playlist, query }: TrackTableProps) {
   const { registerPanelRef, setActivePanel, setPlaylist } = usePlayback()
 
   const tableRef = React.useRef<HTMLTableElement>(null)
