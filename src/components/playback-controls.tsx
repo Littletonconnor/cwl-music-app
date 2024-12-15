@@ -27,9 +27,7 @@ export function PlaybackControls() {
     const updateDuration = () => setDuration(audio.duration)
 
     audio.addEventListener('timeupdate', updateTime)
-    audio.addEventListener('loadedmetadata', (e) => {
-      updateDuration()
-    })
+    audio.addEventListener('loadedmetadata', updateDuration)
 
     return () => {
       audio.removeEventListener('timeupdate', updateTime)
@@ -230,13 +228,10 @@ export function Volume() {
 
     const rect = volumeBarRef.current.getBoundingClientRect()
     const x = e.clientX - rect.left
-    const percentage = Math.max(0, Math.max(100, (x / rect.width) * 100))
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
     setVolume(percentage)
     if (audioRef.current) {
-      {
-        audioRef.current.volume = percentage / 100
-      }
-
+      audioRef.current.volume = percentage / 100
       setIsMuted(percentage === 0)
     }
   }
@@ -246,6 +241,7 @@ export function Volume() {
 
     if (isMuted) {
       audioRef.current.volume = volume / 100
+      setIsMuted(false)
     } else {
       audioRef.current.volume = 0
       setIsMuted(true)
@@ -253,7 +249,7 @@ export function Volume() {
   }
 
   const toggleVolumeVisibility = () => {
-    setIsVolumeVisible(!isVolumeVisible)
+    setIsVolumeVisible((prev) => !prev)
   }
 
   return (
@@ -277,9 +273,15 @@ export function Volume() {
       {isVolumeVisible && (
         <div className="absolute bottom-full right-0 mb-2 p-2 bg-[#282828] rounded-md shadow-lg">
           <div
-            className="absolute top-0 left-0 h-full bg-white rounded-full"
-            style={{ width: `${volume}%` }}
-          />
+            ref={volumeBarRef}
+            onClick={handleVolumeChange}
+            className="w-20 h-1 bg-[#3E3E3E] rounded-full cursor-pointer relative"
+          >
+            <div
+              className="absolute top-0 left-0 h-full bg-white rounded-full"
+              style={{ width: `${volume}%` }}
+            />
+          </div>
         </div>
       )}
     </div>
