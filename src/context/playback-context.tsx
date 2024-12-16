@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 
+import { playlists } from '@/lib/db/schema'
 import { Song } from '@/lib/db/types'
 import { getAudioSrc } from '@/lib/utils'
 
@@ -61,8 +62,26 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
     }
     // TODO: setActivePanel to tracklist
   }, [])
-  const playNextTrack = React.useCallback(() => {}, [])
-  const playPreviousTrack = React.useCallback(() => {}, [])
+
+  const playNextTrack = React.useCallback(() => {
+    if (currentTrack && playlist.length > 0) {
+      const currentIdx = playlist.findIndex((track) => {
+        return track.id === currentTrack.id
+      })
+      const nextIdx = (currentIdx + 1) % playlist.length
+      playTrack(playlist[nextIdx])
+    }
+  }, [currentTrack])
+
+  const playPreviousTrack = React.useCallback(() => {
+    if (currentTrack && playlist.length > 0) {
+      const currentIdx = playlist.findIndex((track) => {
+        return currentTrack.id === track.id
+      })
+      const prevIdx = (currentIdx - 1) % playlist.length
+      playTrack(playlist[prevIdx])
+    }
+  }, [currentTrack])
 
   const value = {
     isPlaying,
