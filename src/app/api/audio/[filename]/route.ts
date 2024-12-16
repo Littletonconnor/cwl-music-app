@@ -17,7 +17,7 @@ export async function GET(_: any, { params }: { params: Promise<{ filename: stri
     const response = new NextResponse(fileBuffer)
 
     response.headers.set('Content-Type', 'audio/mpeg')
-    response.headers.set('Content-Lenght', fileBuffer.byteLength.toString())
+    response.headers.set('Content-Length', fileBuffer.byteLength.toString())
 
     return response
   } catch (error) {
