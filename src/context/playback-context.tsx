@@ -42,6 +42,8 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
   const audioRef = React.useRef<HTMLAudioElement>(null)
 
   const togglePlayPause = React.useCallback(() => {
+    console.log('[PlayBackContext]: togglePlayPause')
+
     if (!audioRef.current) return
 
     if (isPlaying) {
@@ -53,6 +55,8 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
   }, [isPlaying])
 
   const playTrack = React.useCallback((track: Song) => {
+    console.log('[PlayBackContext]: playTrack')
+
     setCurrentTrack(track)
     setIsPlaying(true)
     setCurrentTime(0)
@@ -64,6 +68,8 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
   }, [])
 
   const playNextTrack = React.useCallback(() => {
+    console.log('[PlayBackContext]: playNextTrack')
+
     if (currentTrack && playlist.length > 0) {
       const currentIdx = playlist.findIndex((track) => {
         return track.id === currentTrack.id
@@ -74,6 +80,8 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
   }, [currentTrack])
 
   const playPreviousTrack = React.useCallback(() => {
+    console.log('[PlayBackContext]: playPreviousTrack')
+
     if (currentTrack && playlist.length > 0) {
       const currentIdx = playlist.findIndex((track) => {
         return currentTrack.id === track.id
