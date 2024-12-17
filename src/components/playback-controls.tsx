@@ -23,8 +23,17 @@ export function PlaybackControls() {
     const audio = audioRef.current
     if (!audio) return
 
-    const updateTime = () => setCurrentTime(audio.currentTime)
-    const updateDuration = () => setDuration(audio.duration)
+    const updateTime = () => {
+      console.log(`[PlaybackControls]: updateTime ${audio.currentTime}`)
+
+      setCurrentTime(audio.currentTime)
+    }
+
+    const updateDuration = () => {
+      console.log(`[PlaybackControls]: updateDuration ${audio.duration}`)
+
+      setDuration(audio.duration)
+    }
 
     audio.addEventListener('timeupdate', updateTime)
     audio.addEventListener('loadedmetadata', updateDuration)
@@ -39,6 +48,7 @@ export function PlaybackControls() {
    * Use navigator media session property to be able to adjust music through
    * operating system.
    */
+
   React.useEffect(() => {
     if ('mediaSession' in navigator && currentTrack) {
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -60,7 +70,6 @@ export function PlaybackControls() {
 
       navigator.mediaSession.setActionHandler('previoustrack', playPreviousTrack)
       navigator.mediaSession.setActionHandler('nexttrack', playNextTrack)
-
       navigator.mediaSession.setActionHandler('seekto', (details) => {
         if (audioRef.current && details.seekTime !== undefined) {
           audioRef.current.currentTime = details.seekTime
@@ -157,6 +166,8 @@ export function ProgressBar() {
     const x = e.clientX - rect.left
     const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
     const newTime = (percentage / 100) * duration
+
+    console.log(`[ProgressBar]: newTime ${newTime}`)
     audioRef.current.currentTime = newTime
     setCurrentTime(newTime)
   }
