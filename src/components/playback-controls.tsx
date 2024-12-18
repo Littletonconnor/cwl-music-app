@@ -39,6 +39,8 @@ export function PlaybackControls() {
     audio.addEventListener('loadedmetadata', updateDuration)
 
     return () => {
+      console.log(`[PlaybackControls]: removing timeupdate and loadedmetadata listeners`)
+
       audio.removeEventListener('timeupdate', updateTime)
       audio.removeEventListener('loadedmetadata', updateDuration)
     }
