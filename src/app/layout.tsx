@@ -9,41 +9,42 @@ import { PlaybackControls } from "@/components/playback-controls";
 import { Playlists } from "@/components/playlists";
 import { PlaybackProvider } from "@/context/playback-context";
 import { PlaylistProvider } from "@/context/playlist-context";
+import { NowPlaying } from "@/components/now-playing";
 
 export const metadata: Metadata = {
-	title: "CWL-UI | Music Player",
-	description: "A local first music player",
+  title: "CWL-UI | Music Player",
+  description: "A local first music player",
 };
 
 export const viewport: Viewport = {
-	width: "device-width",
-	initialScale: 1,
-	maximumScale: 1,
-	viewportFit: "cover",
-	themeColor: "#0A0A0A",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0A0A0A",
 };
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	const playlistsPromise = getAllPlaylists();
+  const playlistsPromise = getAllPlaylists();
 
-	return (
-		<html lang="en" className={inter.className}>
-			<body className="dark flex flex-col md:flex-row h-[100dvh] text-gray-200 bg-[#0A0A0A]">
-				<PlaybackProvider>
-					<PlaylistProvider playlistsPromise={playlistsPromise}>
-						<Playlists />
-						{children}
-					</PlaylistProvider>
-					{/* NowPlaying (Right hand side navigation bar) */}
-					<PlaybackControls />
-				</PlaybackProvider>
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" className={inter.className}>
+      <body className="dark flex flex-col md:flex-row h-[100dvh] text-gray-200 bg-[#0A0A0A]">
+        <PlaybackProvider>
+          <PlaylistProvider playlistsPromise={playlistsPromise}>
+            <Playlists />
+            {children}
+          </PlaylistProvider>
+          <NowPlaying />
+          <PlaybackControls />
+        </PlaybackProvider>
+      </body>
+    </html>
+  );
 }
