@@ -8,7 +8,7 @@ import { usePlayback } from "@/context/playback-context";
 import { PlaylistWithSongs, Song } from "@/lib/db/types";
 import {
 	cn,
-	didKeyBoardSelect,
+	keyboardDownSelect,
 	formatDuration,
 	highlightText,
 } from "@/lib/utils";
@@ -27,7 +27,7 @@ export function SongTable({ playlist, query }: TrackTableProps) {
 	);
 
 	React.useEffect(() => {
-		registerPanelRef("tracklist", tableRef);
+		registerPanelRef("songlist", tableRef);
 	}, [registerPanelRef]);
 
 	React.useEffect(() => {
@@ -37,7 +37,8 @@ export function SongTable({ playlist, query }: TrackTableProps) {
 	return (
 		<table
 			className="w-full text-xs"
-			onClick={() => setActivePanel("tracklist")}
+			onClick={() => setActivePanel("songlist")}
+			ref={tableRef}
 		>
 			<thead className="sticky top-0 bg-[#0A0A0A] z-10 border-b border-[#282828]">
 				<tr className="text-left text-gray-400">
@@ -88,8 +89,9 @@ function TrackRow({
 		isPlaying,
 		setActivePanel,
 		handleKeyNavigation,
-		playTrack,
+		playSong,
 	} = usePlayback();
+
 	const [isFocused, setIsFocused] = React.useState(false);
 
 	const isCurrentTrack = currentTrack?.name === track.name;
@@ -97,26 +99,26 @@ function TrackRow({
 
 	const onClickTrackRow = (e: React.MouseEvent) => {
 		e.preventDefault();
-		setActivePanel("tracklist");
+		setActivePanel("songlist");
 		onSelect();
 		if (isCurrentTrack) {
 			togglePlayPause();
 		} else {
-			playTrack(track);
+			playSong(track);
 		}
 	};
 
 	const onKeyDownTrackRow = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
-		if (didKeyBoardSelect(e)) {
+		if (keyboardDownSelect(e)) {
 			e.preventDefault();
 			onSelect();
 			if (isCurrentTrack) {
 				togglePlayPause();
 			} else {
-				playTrack(track);
+				playSong(track);
 			}
 		} else {
-			handleKeyNavigation(e, "tracklist");
+			handleKeyNavigation("songlist", e);
 		}
 	};
 
@@ -129,6 +131,8 @@ function TrackRow({
 			tabIndex={0}
 			onClick={onClickTrackRow}
 			onKeyDown={onKeyDownTrackRow}
+			onFocus={() => setIsFocused(true)}
+			onBlur={() => setIsFocused(false)}
 		>
 			<td className="py-[2px] pl-3 pr-2 tabular-nums w-10 text-center">
 				{isCurrentTrack && isPlaying ? (

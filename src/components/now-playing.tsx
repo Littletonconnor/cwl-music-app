@@ -9,8 +9,6 @@ export function NowPlaying() {
 
 	if (!currentTrack) return null;
 
-	console.log("currentTrack", currentTrack);
-
 	return (
 		<div className="hidden md:flex md:flex-col w-56 p-4 bg-[#121212] overflow-auto">
 			<h2 className="mb-3 text-sm font-semibold text-gray-200">Now Playing</h2>
