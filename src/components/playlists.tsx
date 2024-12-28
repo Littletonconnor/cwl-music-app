@@ -14,9 +14,9 @@ import { cn } from '@/lib/utils'
 
 export function Playlists() {
   const pathname = usePathname()
-  const { playlists, updatePlaylist } = usePlaylist()
-  const playlistsContainerRef = useRef<HTMLUListElement>(null)
-  const { registerPanelRef, handleKeyNavigation, setActivePanel } = usePlayback()
+  const { playlists } = usePlaylist()
+  const playlistsContainerRef = useRef<HTMLDivElement>(null)
+  const { registerPanelRef, setActivePanel } = usePlayback()
 
   React.useEffect(() => {
     registerPanelRef('sidebar', playlistsContainerRef)
@@ -24,6 +24,7 @@ export function Playlists() {
 
   return (
     <div
+      ref={playlistsContainerRef}
       className="hidden md:block w-56 bg-[#121212] h-[100dvh] overflow-auto"
       onClick={() => setActivePanel('sidebar')}
     >
@@ -55,7 +56,7 @@ export function Playlists() {
           </form>
         </div>
       </div>
-      <ul className="space-y-0.5 text-xs mt-[1px]" ref={playlistsContainerRef}>
+      <ul className="space-y-0.5 text-xs mt-[1px]">
         {playlists.map((p) => (
           <li key={p.name}>{p.name}</li>
         ))}

@@ -2,11 +2,9 @@
 
 import * as React from 'react'
 
-import { playlists } from '@/lib/db/schema'
+import { useKeyboardNavigation, type Panel } from '@/hooks/use-keyboard-navigation'
 import { Song } from '@/lib/db/types'
 import { getAudioSrc } from '@/lib/utils'
-
-type Panel = 'sidebar' | 'tracklist'
 
 interface PlaybackContextType {
   isPlaying: boolean
@@ -14,7 +12,7 @@ interface PlaybackContextType {
   currentTime: number
   duration: number
   togglePlayPause: () => void
-  playTrack: (track: Song) => void
+  playSong: (track: Song) => void
   playNextTrack: () => void
   playPreviousTrack: () => void
   setCurrentTime: (time: number) => void
@@ -24,7 +22,7 @@ interface PlaybackContextType {
   activePanel: Panel
   setActivePanel: (panel: Panel) => void
   registerPanelRef: (panel: Panel, ref: React.RefObject<HTMLElement>) => void
-  handleKeyNavigation: (e: React.KeyboardEvent, panel: Panel) => void
+  handleKeyNavigation: (panel: Panel, e: React.KeyboardEvent) => void
 }
 
 const PlaybackContext = React.createContext<PlaybackContextType | undefined>(undefined)
@@ -41,6 +39,9 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
   const [playlist, setPlaylist] = React.useState<Song[]>([])
   const audioRef = React.useRef<HTMLAudioElement>(null)
 
+  const { setActivePanel, registerPanelRef, activePanel, handleKeyNavigation } =
+    useKeyboardNavigation()
+
   const togglePlayPause = React.useCallback(() => {
     console.log('[PlayBackContext]: togglePlayPause')
 
@@ -54,8 +55,8 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
     setIsPlaying(!isPlaying)
   }, [isPlaying])
 
-  const playTrack = React.useCallback((track: Song) => {
-    console.log('[PlayBackContext]: playTrack')
+  const playSong = React.useCallback((track: Song) => {
+    console.log('[PlayBackContext]: playSong')
 
     setCurrentTrack(track)
     setIsPlaying(true)
@@ -64,7 +65,7 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
       audioRef.current.src = getAudioSrc(track.audioUrl)
       audioRef.current.play()
     }
-    // TODO: setActivePanel to tracklist
+    setActivePanel('songlist')
   }, [])
 
   const playNextTrack = React.useCallback(() => {
@@ -75,7 +76,7 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
         return track.id === currentTrack.id
       })
       const nextIdx = (currentIdx + 1) % playlist.length
-      playTrack(playlist[nextIdx])
+      playSong(playlist[nextIdx])
     }
   }, [currentTrack])
 
@@ -87,7 +88,7 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
         return currentTrack.id === track.id
       })
       const prevIdx = (currentIdx - 1) % playlist.length
-      playTrack(playlist[prevIdx])
+      playSong(playlist[prevIdx])
     }
   }, [currentTrack])
 
@@ -97,17 +98,17 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
     currentTime,
     duration,
     togglePlayPause,
-    playTrack,
+    playSong,
     playNextTrack,
     playPreviousTrack,
     setCurrentTime,
     setDuration,
     setPlaylist,
     audioRef,
-    activePanel: 'sidebar' as const,
-    setActivePanel: () => {},
-    registerPanelRef: () => {},
-    handleKeyNavigation: () => {},
+    activePanel,
+    setActivePanel,
+    registerPanelRef,
+    handleKeyNavigation,
   }
 
   return <PlaybackContext.Provider value={value}>{children}</PlaybackContext.Provider>

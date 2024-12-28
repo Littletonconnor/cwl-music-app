@@ -45,7 +45,7 @@ export function getAudioSrc(url: string) {
 export const ENTER_KEY = 'Enter'
 export const SPACE_KEY = ' '
 
-export function didKeyBoardSelect(e: React.KeyboardEvent<HTMLTableRowElement>) {
+export function keyboardDownSelect(e: React.KeyboardEvent<HTMLTableRowElement>) {
   if (e.key === ENTER_KEY || e.key === SPACE_KEY) {
     return true
   } else {

@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 
+import { ScrollArea, ScrollBar } from '@/components/scroll-area'
 import { SongTable } from '@/components/song-table'
 import { getAllSongs } from '@/lib/db/queries'
-import { ScrollArea, ScrollBar } from '@/components/scroll-area'
 
 interface PageProps {
   searchParams: Promise<{ q: string }>
@@ -11,7 +11,7 @@ interface PageProps {
 export default function Page({ searchParams }: PageProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-[#0A0A0A] pb-[69px] pt-2">
-      <ScrollArea className='flex-1'>
+      <ScrollArea className="flex-1">
         <div className="min-w-max">
           <Suspense fallback={<div className="w-full">Loading...</div>}>
             <Tracks searchParams={searchParams} />

@@ -1,37 +1,37 @@
-import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from 'next'
+import { Inter } from 'next/font/google'
 
-import { getAllPlaylists } from "@/lib/db/queries";
+import { getAllPlaylists } from '@/lib/db/queries'
 
-import "./globals.css";
+import './globals.css'
 
-import { PlaybackControls } from "@/components/playback-controls";
-import { Playlists } from "@/components/playlists";
-import { PlaybackProvider } from "@/context/playback-context";
-import { PlaylistProvider } from "@/context/playlist-context";
-import { NowPlaying } from "@/components/now-playing";
+import { NowPlaying } from '@/components/now-playing'
+import { PlaybackControls } from '@/components/playback-controls'
+import { Playlists } from '@/components/playlists'
+import { PlaybackProvider } from '@/context/playback-context'
+import { PlaylistProvider } from '@/context/playlist-context'
 
 export const metadata: Metadata = {
-  title: "CWL-UI | Music Player",
-  description: "A local first music player",
-};
+  title: 'CWL-UI | Music Player',
+  description: 'A local first music player',
+}
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  viewportFit: "cover",
-  themeColor: "#0A0A0A",
-};
+  viewportFit: 'cover',
+  themeColor: '#0A0A0A',
+}
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-  const playlistsPromise = getAllPlaylists();
+  const playlistsPromise = getAllPlaylists()
 
   return (
     <html lang="en" className={inter.className}>
@@ -46,5 +46,5 @@ export default function RootLayout({
         </PlaybackProvider>
       </body>
     </html>
-  );
+  )
 }
