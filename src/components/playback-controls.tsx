@@ -115,8 +115,6 @@ export function ProgressBar() {
 		setCurrentTime(newTime);
 	};
 
-	console.log("CURRENT TIME", currentTime);
-
 	return (
 		<div className="flex items-center w-full mt-1">
 			<span className="text-xs tabular-nums text-gray-400">

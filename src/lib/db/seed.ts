@@ -5,9 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { db } from "./drizzle";
 import { playlists, playlistSongs, songs } from "./schema";
-
-const DEFAULT_COVER_URL =
-	"https://images.unsplash.com/photo-1470225620780-dba8ba36b745";
+import { DEFAULT_COVER_URL } from "./constants";
 
 async function seed() {
 	console.time("🌱 Seeded database");

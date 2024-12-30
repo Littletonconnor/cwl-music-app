@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useRef } from "react";
-import { MoreVertical, Plus, Trash } from "lucide-react";
+import { MoreVertical, Trash } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/button";
 import { SearchInput } from "@/components/search-input";
+import { CreatePlaylistModal } from "@/components/create-playlist-modal";
 import { usePlayback } from "@/context/playback-context";
 import { usePlaylist } from "@/context/playlist-context";
 import { addPlaylistAction } from "@/lib/actions";
@@ -57,15 +58,7 @@ export function Playlists() {
 						Playlists
 					</Link>
 					<form action={addPlaylistAction}>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="w-5 h-5"
-							type="submit"
-						>
-							<Plus className="w-3 h-3 text-gray-400" />
-							<span className="sr-only">Add new playlist</span>
-						</Button>
+						<CreatePlaylistModal />
 					</form>
 				</div>
 			</div>
