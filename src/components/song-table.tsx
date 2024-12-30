@@ -155,7 +155,7 @@ function TrackRow({
 							className="object-cover"
 						/>
 					</div>
-					<div className="font-medium truncate max-w-[180px] sm:max-w-[200px] text-[#d1d5db]">
+					<div className="font-medium truncate text-[#d1d5db]">
 						{highlightText(track.name, query)}
 						<span className="sm:hidden text-gray-400 ml-2">
 							• {highlightText(track.artist, query)}
@@ -163,13 +163,13 @@ function TrackRow({
 					</div>
 				</div>
 			</td>
-			<td className="py-[2px] px-2 hidden sm:table-cell text-[#d1d5db] max-w-40 truncate">
+			<td className="py-[2px] px-2 hidden sm:table-cell text-[#d1d5db] truncate">
 				{highlightText(track.artist, query)}
 			</td>
-			<td className="py-[2px] px-2 hidden sm:table-cell text-[#d1d5db] max-w-40 truncate">
+			<td className="py-[2px] px-2 hidden sm:table-cell text-[#d1d5db] truncate">
 				{highlightText(track.album!, query)}
 			</td>
-			<td className="py-[2px] px-2 hidden sm:table-cell text-[#d1d5db] max-w-40 truncate">
+			<td className="py-[2px] px-2 hidden sm:table-cell text-[#d1d5db] truncate">
 				{formatDuration(track.duration)}
 			</td>
 			{shouldHighlightRow && (
