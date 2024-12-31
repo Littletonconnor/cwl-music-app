@@ -2,6 +2,7 @@ import { ChevronLeft, Shuffle } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { AddSongModal } from '@/components/add-song-modal'
 import { Button } from '@/components/button'
 import { ScrollArea, ScrollBar } from '@/components/scroll-area'
 import { SongTable } from '@/components/song-table'
@@ -53,9 +54,10 @@ export default async function PlaylistPage({ params }: { params: Promise<{ id: s
         <div>
           {/* TODO: Make this clickable and add edit functionality. */}
           <p className="text-xl sm:text-2xl font-bold">{playlist.name}</p>
-          <p className="text-xs sm:text-sm text-gray-400">
+          <p className="text-xs sm:text-sm text-gray-400 mb-1">
             {playlist.trackCount} tracks • {formatDuration(playlist.duration)}
           </p>
+          <AddSongModal />
         </div>
       </div>
 

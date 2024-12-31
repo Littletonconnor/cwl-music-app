@@ -61,3 +61,31 @@ export async function deletePlaylistAction(id: string) {
   })
   revalidateTag('playlists')
 }
+
+export async function addSong(formData: FormData) {
+  try {
+    const file = formData.get('file') as File
+    const title = formData.get('title') as string
+    const artist = formData.get('artist') as string
+    const album = formData.get('album') as string
+    const genre = formData.get('genre') as string
+
+    // TODO:
+    // 1. Validate the file is an mp3
+    // 2. Upload the file to your storage
+    // 3. Save the metadata to your database
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    revalidateTag('playlists')
+
+    return {
+      success: true,
+      message: 'Song added successfully',
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Failed to add song',
+    }
+  }
+}
