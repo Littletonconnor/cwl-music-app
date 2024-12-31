@@ -5,7 +5,7 @@ import { revalidateTag } from 'next/cache'
 import { v4 as uuidv4 } from 'uuid'
 
 import { db } from '@/lib/db/drizzle'
-import { DEFAULT_COVER_URL } from './db/constants'
+import { COVER_URLS } from './db/constants'
 import { playlists, playlistSongs } from './db/schema'
 
 export async function addPlaylistAction() {
@@ -42,7 +42,7 @@ export async function createPlaylistAction(formData: FormData) {
     await db.insert(playlists).values({
       id: playlistId,
       name,
-      coverUrl: DEFAULT_COVER_URL,
+      coverUrl: COVER_URLS[Math.floor(Math.random() * COVER_URLS.length)],
     })
     revalidateTag('playlists')
 
@@ -59,4 +59,5 @@ export async function deletePlaylistAction(id: string) {
 
     await tx.delete(playlists).where(eq(playlists.id, id)).execute()
   })
+  revalidateTag('playlists')
 }
