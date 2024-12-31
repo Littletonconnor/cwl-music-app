@@ -1,7 +1,8 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useState } from 'react'
 import { Plus, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 import { createPlaylistAction } from '@/lib/actions'
 import { Button } from './button'
@@ -20,16 +21,20 @@ import { Label } from './label'
 export function CreatePlaylistModal() {
   const [open, setOpen] = useState(false)
   const [coverPhoto, setCoverPhoto] = useState<File | null>(null)
+  const router = useRouter()
 
-  const [imageState, playlistAction, imagePending] = useActionState(handleSubmit, {
-    success: false,
-  })
+  async function handleAction(formData: FormData) {
+    try {
+      const { playlistId } = await createPlaylistAction(formData)
+      router.push(`/p/${playlistId}`)
+      router.refresh()
 
-  async function handleSubmit(_: any, formData: FormData) {
-    setOpen(false)
-    setCoverPhoto(null)
-
-    return createPlaylistAction(_, formData)
+      setOpen(false)
+      setCoverPhoto(null)
+    } catch (error) {
+      // TODO: handle this error
+      console.error(`error creating playlist: `, error)
+    }
   }
 
   return (
@@ -46,7 +51,7 @@ export function CreatePlaylistModal() {
             Enter a name for your playlist and upload a cover photo.
           </DialogDescription>
         </DialogHeader>
-        <form action={playlistAction}>
+        <form action={handleAction}>
           <div className="flex flex-col gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="playlist-name">Name</Label>

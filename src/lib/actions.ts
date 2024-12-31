@@ -1,10 +1,12 @@
 'use server'
 
+import { eq } from 'drizzle-orm'
+import { revalidateTag } from 'next/cache'
 import { v4 as uuidv4 } from 'uuid'
 
 import { db } from '@/lib/db/drizzle'
 import { DEFAULT_COVER_URL } from './db/constants'
-import { playlists } from './db/schema'
+import { playlists, playlistSongs } from './db/schema'
 
 export async function addPlaylistAction() {
   const newPlaylistId = uuidv4()
@@ -21,7 +23,10 @@ export async function addPlaylistAction() {
   // 3. Push route
 }
 
-export async function createPlaylistAction(_: any, formData: FormData) {
+export async function createPlaylistAction(formData: FormData) {
+  // TODO: refactor these actions to just handle server stuff and blow up
+  // if an issue happens. Validation should happen prior to this and error handling
+  // can be done on the client.
   const name = formData.get('playlist-name') as string
 
   if (!name) {
@@ -39,10 +44,19 @@ export async function createPlaylistAction(_: any, formData: FormData) {
       name,
       coverUrl: DEFAULT_COVER_URL,
     })
+    revalidateTag('playlists')
 
     return { success: true, playlistId: playlistId }
   } catch (error) {
     console.error('Error uploading file:', error)
     throw new Error('Failed to add new Playlist')
   }
+}
+
+export async function deletePlaylistAction(id: string) {
+  await db.transaction(async (tx) => {
+    await tx.delete(playlistSongs).where(eq(playlistSongs.playlistId, id)).execute()
+
+    await tx.delete(playlists).where(eq(playlists.id, id)).execute()
+  })
 }

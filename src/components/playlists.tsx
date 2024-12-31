@@ -3,14 +3,14 @@
 import React, { useRef } from 'react'
 import { MoreVertical, Trash } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { Button } from '@/components/button'
 import { CreatePlaylistModal } from '@/components/create-playlist-modal'
 import { SearchInput } from '@/components/search-input'
 import { usePlayback } from '@/context/playback-context'
 import { usePlaylist } from '@/context/playlist-context'
-import { addPlaylistAction } from '@/lib/actions'
+import { deletePlaylistAction } from '@/lib/actions'
 import { Playlist } from '@/lib/db/types'
 import { cn } from '@/lib/utils'
 import {
@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './dropdown-menu'
+import { ScrollArea, ScrollBar } from './scroll-area'
 
 export function Playlists() {
   const pathname = usePathname()
@@ -33,7 +34,7 @@ export function Playlists() {
   return (
     <div
       ref={playlistsContainerRef}
-      className="hidden md:block w-56 bg-[#121212] h-[100dvh] overflow-auto"
+      className="hidden md:block w-56 bg-[#121212]"
       onClick={() => setActivePanel('sidebar')}
     >
       <div className="m-4">
@@ -56,28 +57,40 @@ export function Playlists() {
           >
             Playlists
           </Link>
-          <form action={addPlaylistAction}>
-            <CreatePlaylistModal />
-          </form>
+          <CreatePlaylistModal />
         </div>
       </div>
-      <ul
-        className="space-y-0.5 text-xs mt-[1px]"
-        onKeyDown={(e) => handleKeyNavigation('sidebar', e)}
-      >
-        {playlists.map((playlist) => (
-          <PlaylistRow key={playlist.name} playlist={playlist} />
-        ))}
-      </ul>
+      <ScrollArea className="h-[calc(100dvh-220px)]">
+        <ul
+          className="space-y-0.5 text-xs mt-[1px]"
+          onKeyDown={(e) => handleKeyNavigation('sidebar', e)}
+        >
+          {playlists.map((playlist) => (
+            <PlaylistRow key={playlist.name} playlist={playlist} />
+          ))}
+        </ul>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
     </div>
   )
 }
 
 function PlaylistRow({ playlist }: { playlist: Playlist }) {
   const pathname = usePathname()
+  const router = useRouter()
 
   async function handleDeletePlaylist() {
-    // call deletePlaylist action
+    try {
+      await deletePlaylistAction(playlist.id)
+
+      if (pathname === `/p/${playlist.id}`) {
+        router.push('/')
+      }
+
+      router.refresh()
+    } catch (error) {
+      // TODO: handle error
+    }
   }
 
   return (
