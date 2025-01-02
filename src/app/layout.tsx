@@ -40,9 +40,9 @@ export default function RootLayout({
           <PlaylistProvider playlistsPromise={playlistsPromise}>
             <Playlists />
             {children}
+            <NowPlaying />
+            <PlaybackControls />
           </PlaylistProvider>
-          <NowPlaying />
-          <PlaybackControls />
         </PlaybackProvider>
       </body>
     </html>
