@@ -57,7 +57,6 @@ export default async function PlaylistPage({ params }: { params: Promise<{ id: s
           <p className="text-xs sm:text-sm text-gray-400 mb-1">
             {playlist.trackCount} tracks • {formatDuration(playlist.duration)}
           </p>
-          <AddSongModal />
         </div>
       </div>
 

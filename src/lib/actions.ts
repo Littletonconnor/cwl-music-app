@@ -62,22 +62,14 @@ export async function deletePlaylistAction(id: string) {
   revalidateTag('playlists')
 }
 
-export async function addSong(formData: FormData) {
+export async function addToPlaylistAction({ playlistId, file, title, artist, album, genre }: any) {
   try {
-    const file = formData.get('file') as File
-    const title = formData.get('title') as string
-    const artist = formData.get('artist') as string
-    const album = formData.get('album') as string
-    const genre = formData.get('genre') as string
-
     // TODO:
     // 1. Validate the file is an mp3
-    // 2. Upload the file to your storage
+    // 2. Upload the file to your storage - In our case we're going to save it locally
     // 3. Save the metadata to your database
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    revalidateTag('playlists')
-
+    console.log('MADE IT IN HERE')
     return {
       success: true,
       message: 'Song added successfully',
