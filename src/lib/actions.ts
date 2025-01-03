@@ -1,7 +1,7 @@
 'use server'
 
-import { eq } from 'drizzle-orm'
-import { revalidateTag } from 'next/cache'
+import { and, eq, sql } from 'drizzle-orm'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { v4 as uuidv4 } from 'uuid'
 
 import { db } from '@/lib/db/drizzle'
@@ -62,17 +62,38 @@ export async function deletePlaylistAction(id: string) {
   revalidateTag('playlists')
 }
 
-export async function addToPlaylistAction({ playlistId, file, title, artist, album, genre }: any) {
+export async function addToPlaylistAction(playlistId: string, songId: string) {
   try {
-    // TODO:
-    // 1. Validate the file is an mp3
-    // 2. Upload the file to your storage - In our case we're going to save it locally
-    // 3. Save the metadata to your database
+    const existingEntry = await db
+      .select()
+      .from(playlistSongs)
+      .where(and(eq(playlistSongs.playlistId, playlistId), eq(playlistSongs.songId, songId)))
+      .execute()
 
-    console.log('MADE IT IN HERE')
+    if (existingEntry.length > 0) {
+      return { success: false, message: 'Song is already in the playlist' }
+    }
+
+    const maxOrderResult = await db
+      .select({
+        maxOrder: sql<number>`MAX(${playlistSongs.order})`,
+      })
+      .from(playlistSongs)
+      .where(eq(playlistSongs.playlistId, playlistId))
+      .execute()
+
+    const newOrder = maxOrderResult[0].maxOrder + 1
+
+    await db
+      .insert(playlistSongs)
+      .values({ id: uuidv4(), playlistId, songId, order: newOrder })
+      .execute()
+
+    revalidatePath('/', 'layout')
+
     return {
       success: true,
-      message: 'Song added successfully',
+      message: 'Song added to playlist successfully',
     }
   } catch (error) {
     return {
