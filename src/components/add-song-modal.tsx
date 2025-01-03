@@ -20,23 +20,29 @@ import {
 import { Label } from './label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
 
+// TODO: Handle forms better throughout this application.
+
 export function AddSongModal({ currentTrack }: { currentTrack: Song }) {
-  const params = useParams<{ id: string }>()
   const { playlists } = usePlaylist()
+  const formMessageId = React.useId()
 
   const [open, setOpen] = React.useState(false)
+  const [error, setError] = React.useState('')
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
     const formData = new FormData(e.currentTarget)
-    const playlistId = formData.get('playlistId')
+    const playlistId = formData.get('playlistId') as string
 
     try {
-      await addToPlaylistAction({
-        songId: currentTrack.id,
-        playlistId: playlistId,
-      })
+      // TODO: Display success in toast
+      const result = await addToPlaylistAction(playlistId, currentTrack.id)
+      if (!result.success) {
+        setError(result.message)
+      } else {
+        setOpen(false)
+      }
     } catch (error) {
       // TODO: Handle error
     }
@@ -62,7 +68,10 @@ export function AddSongModal({ currentTrack }: { currentTrack: Song }) {
           <div className="grid gap-2">
             <Label htmlFor="playlistId">Playlist</Label>
             <Select name="playlistId">
-              <SelectTrigger>
+              <SelectTrigger
+                aria-describedby={error ? `${formMessageId}` : undefined}
+                aria-invalid={!!error}
+              >
                 <SelectValue placeholder="Select a playlist" />
               </SelectTrigger>
               <SelectContent>
@@ -73,6 +82,11 @@ export function AddSongModal({ currentTrack }: { currentTrack: Song }) {
                 ))}
               </SelectContent>
             </Select>
+            {error && (
+              <p id={formMessageId} className="text-xs text-destructive font-medium">
+                {error}
+              </p>
+            )}
           </div>
           <Button type="submit" className="mt-4">
             Submit

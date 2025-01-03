@@ -36,7 +36,6 @@ export function SongTable({ playlist, query }: TrackTableProps) {
           <th className="py-2 px-2 font-medium hidden sm:table-cell">Artist</th>
           <th className="py-2 px-2 font-medium hidden sm:table-cell">Album</th>
           <th className="py-2 px-2 font-medium hidden sm:table-cell">Duration</th>
-          <th className="p-2 font-medium w-8" />
         </tr>
       </thead>
       <tbody className="mt-[1px]">
