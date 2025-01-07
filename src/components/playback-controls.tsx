@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { Heart, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from 'lucide-react'
 
-import placeholder from '@/app/placeholder.webp'
 import { Button } from '@/components/button'
 import { usePlayback } from '@/context/playback-context'
 import { useMediaSession } from '@/hooks/use-media-storage'
@@ -120,7 +119,7 @@ export function TrackInfo() {
           <div className="overflow-hidden rounded-sm">
             <img
               className="w-10 h-10 object-cover"
-              src={currentTrack.imageUrl || placeholder.src}
+              src={currentTrack.imageUrl || '/placeholder.webp'}
               alt="Now playing"
             />
           </div>

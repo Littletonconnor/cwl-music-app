@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 
-import placeholder from '@/app/placeholder.webp'
 import { usePlayback } from '@/context/playback-context'
 import { AddSongModal } from './add-song-modal'
 import { RemoveSongModal } from './remove-song-modal'
@@ -19,7 +18,9 @@ export function NowPlaying() {
       <Image
         className="aspect-square rounded-sm mb-4"
         alt="current playing song"
-        src={currentTrack.imageUrl ? currentTrack.imageUrl : placeholder}
+        width={200}
+        height={200}
+        src={currentTrack.imageUrl ? currentTrack.imageUrl : '/placeholder.webp'}
       />
       <div className="space-y-2">
         <div className="space-y-2">

@@ -3,7 +3,6 @@
 import * as React from 'react'
 import Image from 'next/image'
 
-import placeholder from '@/app/placeholder.webp'
 import { usePlayback } from '@/context/playback-context'
 import { PlaylistWithSongs, Song } from '@/lib/db/types'
 import { cn, formatDuration, highlightText, keyboardDownSelect } from '@/lib/utils'
@@ -129,7 +128,7 @@ function TrackRow({ track, index, query, isSelected, onSelect }: TrackRowProps) 
         <div className="flex items-center">
           <div className="relative size-5 mr-2 rounded-sm overflow-hidden">
             <Image
-              src={track.imageUrl || placeholder}
+              src={track.imageUrl || '/placeholder.webp'}
               alt={`${track.album} cover`}
               fill
               className="object-cover"
