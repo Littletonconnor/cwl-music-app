@@ -14,6 +14,8 @@ export function useKeyboardNavigation() {
   }, [])
 
   const handleKeyNavigation = React.useCallback((panel: Panel, e: React.KeyboardEvent) => {
+    console.log('[hook]: useKeyboardNavigation')
+
     const currentRef = panelRefs.current[panel]
     if (!currentRef?.current) return
 

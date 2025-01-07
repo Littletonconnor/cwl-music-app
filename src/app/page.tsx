@@ -24,6 +24,7 @@ export default function Page({ searchParams }: PageProps) {
 }
 
 async function Tracks({ searchParams }: PageProps) {
+  // TODO: Filtering would probably be faster on the server.
   const query = (await searchParams)?.q
   const songs = await getAllSongs()
   const filteredSongs = songs.filter((song) =>

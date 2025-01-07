@@ -5,6 +5,7 @@ import Image from 'next/image'
 import placeholder from '@/app/placeholder.webp'
 import { usePlayback } from '@/context/playback-context'
 import { AddSongModal } from './add-song-modal'
+import { RemoveSongModal } from './remove-song-modal'
 
 export function NowPlaying() {
   const { currentTrack } = usePlayback()
@@ -21,8 +22,9 @@ export function NowPlaying() {
         src={currentTrack.imageUrl ? currentTrack.imageUrl : placeholder}
       />
       <div className="space-y-2">
-        <div>
+        <div className="space-y-2">
           <AddSongModal currentTrack={currentTrack} />
+          <RemoveSongModal currentTrack={currentTrack} />
         </div>
         <div>
           <p className="text-sm text-gray-400 font-medium truncate">Title</p>

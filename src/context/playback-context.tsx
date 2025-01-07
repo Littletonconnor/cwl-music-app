@@ -92,26 +92,47 @@ export function PlaybackProvider({ children }: PlaybackProviderProps) {
     }
   }, [currentTrack])
 
-  const value = {
-    isPlaying,
-    currentTrack,
-    currentTime,
-    duration,
-    togglePlayPause,
-    playSong,
-    playNextTrack,
-    playPreviousTrack,
-    setCurrentTime,
-    setDuration,
-    setPlaylist,
-    audioRef,
-    activePanel,
-    setActivePanel,
-    registerPanelRef,
-    handleKeyNavigation,
-  }
+  React.useEffect(() => {
+    console.log('[hook]: useGlobalKeybindings')
 
-  return <PlaybackContext.Provider value={value}>{children}</PlaybackContext.Provider>
+    const handleGlobalKeydown = (e: KeyboardEvent) => {
+      if (e.key === '/') {
+        e.preventDefault()
+        const input = document.querySelector('input[type="search"]') as HTMLInputElement | null
+        input?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleGlobalKeydown)
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeydown)
+    }
+  }, [])
+
+  return (
+    <PlaybackContext.Provider
+      value={{
+        isPlaying,
+        currentTrack,
+        currentTime,
+        duration,
+        togglePlayPause,
+        playSong,
+        playNextTrack,
+        playPreviousTrack,
+        setCurrentTime,
+        setDuration,
+        setPlaylist,
+        audioRef,
+        activePanel,
+        setActivePanel,
+        registerPanelRef,
+        handleKeyNavigation,
+      }}
+    >
+      {children}
+    </PlaybackContext.Provider>
+  )
 }
 
 export function usePlayback() {

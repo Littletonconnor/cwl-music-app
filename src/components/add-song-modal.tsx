@@ -1,10 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import { Music } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { Music, Trash } from 'lucide-react'
 
-import { usePlayback } from '@/context/playback-context'
 import { usePlaylist } from '@/context/playlist-context'
 import { addToPlaylistAction } from '@/lib/actions'
 import { Song } from '@/lib/db/types'
@@ -49,11 +47,19 @@ export function AddSongModal({ currentTrack }: { currentTrack: Song }) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open)
+        setTimeout(() => {
+          setError('')
+        }, 500)
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant="secondary"
-          className="h-7 gap-2 text-xs bg-[#282828] hover:bg-[#3E3E3E] text-white"
+          className="h-7 gap-2 text-xs bg-[#282828] hover:bg-[#3E3E3E] text-white w-full"
         >
           <Music className="h-4 w-4" />
           Add to playlist
