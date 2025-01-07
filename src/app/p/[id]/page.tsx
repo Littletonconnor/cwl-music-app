@@ -2,7 +2,6 @@ import { ChevronLeft, Shuffle } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { AddSongModal } from '@/components/add-song-modal'
 import { Button } from '@/components/button'
 import { ScrollArea, ScrollBar } from '@/components/scroll-area'
 import { SongTable } from '@/components/song-table'

@@ -62,6 +62,14 @@ export async function deletePlaylistAction(id: string) {
   revalidateTag('playlists')
 }
 
+export async function deletePlaylistSongAction(playlistId: string, songId: string) {
+  await db
+    .delete(playlistSongs)
+    .where(and(eq(playlistSongs.playlistId, playlistId), eq(playlistSongs.songId, songId)))
+
+  revalidateTag('playlists')
+}
+
 export async function addToPlaylistAction(playlistId: string, songId: string) {
   try {
     const existingEntry = await db

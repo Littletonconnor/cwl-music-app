@@ -39,7 +39,10 @@ export function SearchInput({ value: initialValue = '' }: SearchInputProps) {
           variant="ghost"
           size="icon"
           className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6"
-          onClick={() => setValue('')}
+          onClick={() => {
+            setValue('')
+            router.push('/')
+          }}
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Clear search</span>
